@@ -3,13 +3,20 @@
         <div class="card text-white bg-dark mb-3 mt-3" style="max-width: 30rem;">
             <div class="card-header text-center">Agrega a un jugador nuevo</div>
             <div class="card-body">
-                <form action="">
-                    <input type="text" class="form-control rounded-1" placeholder="ingrese nombre del jugador">
-                    <input type="text" class="form-control rounded-1 mt-2" placeholder="ingrese contraseña del jugador">
-                    
+                <form action="" [formGroup]="form" (ngSubmit)="addPlayer()">
+                    <input formControlName="nickname" type="text" class="form-control rounded-1" placeholder="ingrese nombre del jugador">
+                    <span *ngIf="form.get('nickname')?.hasError('required') && form.get('nickname')?.touched">Este campo es obligatorio</span>
+                    <span *ngIf="form.get('nickname')?.hasError('minlength') && form.get('nickname')?.touched">minimo 5 caracteres</span>
+                    <span *ngIf="form.get('nickname')?.hasError('maxlength') && form.get('nickname')?.touched">maximo 25caracteres</span>
+
+                    <input formControlName="password" type="password" class="form-control rounded-1 mt-2" placeholder="ingrese contraseña del jugador">
+                    <span *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched">Este campo es obligatorio</span>
+                    <span *ngIf="form.get('password')?.hasError('minlength') && form.get('password')?.touched">minimo 5 caracteres</span>
+                    <span *ngIf="form.get('password')?.hasError('maxlength') && form.get('password')?.touched">maximo 25caracteres</span>
+
                     <div class="row mt-2 text-center">
                         <div class="col-lg-6">
-                            <button type="button" class="btn btn-primary">Aceptar</button>
+                            <button [disabled]="form.invalid" type="submit" class="btn btn-primary">Aceptar</button>
                         </div>
                         <div class="col-lg-6">
                             <button routerLink="/players" type="button" class="btn btn-secondary">Regresar</button>

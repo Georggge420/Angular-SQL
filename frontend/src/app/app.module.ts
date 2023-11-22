@@ -1,8 +1,14 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
+//Modulos
+import { ReactiveFormsModule } from '@angular/forms';
+ 
+//Componentes
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ListPlayersComponent } from './components/list-players/list-players.component';
 import { PartidasRecientesComponent } from './components/partidas-recientes/partidas-recientes.component';
@@ -22,7 +28,8 @@ import { HomeComponent } from './components/home/home.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
