@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 
 //Modulos
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http'
  
 //Componentes
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -29,7 +30,8 @@ import { HomeComponent } from './components/home/home.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
