@@ -1,4 +1,5 @@
 import { Component, OnInit} from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Player } from 'src/app/interfaces/player';
 import { PlayerService } from 'src/app/services/player.service';
 
@@ -8,12 +9,10 @@ import { PlayerService } from 'src/app/services/player.service';
   styleUrls: ['./list-players.component.css']
 })
 export class ListPlayersComponent implements OnInit{
-  listPlayers: Player[] =  [
-    {id : 1, nickname: 'Hola321', p_headshots : 30, p_bodyshots : 40, p_utilidad : 30},
-    {id : 5, nickname: 'putos', p_headshots : 2, p_bodyshots : 1, p_utilidad : 40}
-  ];
+  listPlayers: Player[] =  [];
+  loading: boolean = false;
 
-  constructor(private _playerServices : PlayerService){
+  constructor(private _playerServices : PlayerService, private toastr: ToastrService){
     this.getListProducts();
   }
 
@@ -22,8 +21,19 @@ export class ListPlayersComponent implements OnInit{
   }
 
   getListProducts(){
-    this._playerServices.getListPlayers().subscribe((data) => {
-      console.log(data);
+    this.loading = true;
+    
+      this._playerServices.getListPlayers().subscribe((data) => {
+        this.listPlayers = data;
+        this.loading = false;
+      })
+  }
+
+  deletePlayer(ID_jugador: number){
+    this.loading = true;
+    this._playerServices.deletePlayer(ID_jugador).subscribe((data) => {
+      this.getListProducts();
+      this.toastr.warning('El jugador fue eliminado con exito', 'Jugador eliminado');
     })
   }
 }

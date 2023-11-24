@@ -1,7 +1,8 @@
-<div class="row justify-content-center">
+<app-progress-bar *ngIf="loading"></app-progress-bar>
+<div *ngIf="!loading" class="row justify-content-center">
     <div class="col-4">
         <div class="card text-white bg-dark mb-3 mt-3" style="max-width: 30rem;">
-            <div class="card-header text-center">Agrega a un jugador nuevo</div>
+            <div class="card-header text-center">{{operacion}}a un jugador nuevo</div>
             <div class="card-body">
                 <form action="" [formGroup]="form" (ngSubmit)="addPlayer()">
                     <input formControlName="nickname" type="text" class="form-control rounded-1" placeholder="ingrese nombre del jugador">
@@ -13,6 +14,10 @@
                     <span *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched">Este campo es obligatorio</span>
                     <span *ngIf="form.get('password')?.hasError('minlength') && form.get('password')?.touched">minimo 5 caracteres</span>
                     <span *ngIf="form.get('password')?.hasError('maxlength') && form.get('password')?.touched">maximo 25caracteres</span>
+
+
+                    <input formControlName="id_juegos" type="number" class="form-control rounded-1 mt-2" placeholder="ingrese el id de juego">
+                    <span *ngIf="form.get('password')?.hasError('required') && form.get('password')?.touched">Este campo es obligatorio</span>
 
                     <div class="row mt-2 text-center">
                         <div class="col-lg-6">
