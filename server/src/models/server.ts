@@ -34,11 +34,13 @@ export class Server{
     }
 
     midlewares(){
+
+        this.app.use(cors({
+            origin: 'http://localhost:4200' // Cambia esto por la dirección de tu frontend si es diferente
+        }));
+
         //Parsear el body
         this.app.use(express.json());
-
-        //cors
-        this.app.use(cors());
     }
 
     async dbConnect(){
