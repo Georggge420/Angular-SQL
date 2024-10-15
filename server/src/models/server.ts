@@ -11,8 +11,8 @@ export class Server{
             console.log(process.env.PORT);
             this.app = express();
             this.port = process.env.PORT || '3001';
-            this.listen();
             this.midlewares();
+            this.listen();
             this.routes();
             this.dbConnect();
     }
