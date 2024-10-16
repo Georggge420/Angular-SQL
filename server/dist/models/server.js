@@ -14,49 +14,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Server = void 0;
 const express_1 = __importDefault(require("express"));
-const path_1 = __importDefault(require("path")); // Necesitarás este módulo para manejar rutas
-const player_1 = __importDefault(require("../routes/player"));
 const cors_1 = __importDefault(require("cors"));
+const player_1 = __importDefault(require("../routes/player"));
 const coneccion_1 = __importDefault(require("../db/coneccion"));
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
-        this.port = process.env.PORT || '3001';
-        this.midlewares();
+        this.port = process.env.PORT || '3001'; // Asegúrate de que este puerto esté configurado correctamente
+        this.middlewares(); // Aquí se configura CORS
         this.routes();
         this.dbConnect();
-        this.listen();
     }
-    listen() {
-        this.app.listen(this.port, () => {
-            console.log(`Aplicación corriendo en el puerto ${this.port}`);
-        });
+    middlewares() {
+        // Permitir todas las orígenes (uso temporal solo en desarrollo)
+        this.app.use((0, cors_1.default)()); // Aquí es donde agregas esta línea
+        // Parsear el body a JSON
+        this.app.use(express_1.default.json());
     }
     routes() {
-        // Rutas de API
+        // Definir las rutas aquí
         this.app.use('/api/players', player_1.default);
-        // Cualquier otra ruta que no sea API, debe servir el archivo index.html
-        this.app.get('*', (req, res) => {
-            res.sendFile(path_1.default.resolve(__dirname, '../build', 'index.html'));
-        });
-    }
-    midlewares() {
-        // Middleware para servir los archivos estáticos
-        this.app.use(express_1.default.static(path_1.default.join(__dirname, '../build')));
-        // Configurar CORS
-        this.app.use((0, cors_1.default)());
-        // Parsear el body como JSON
-        this.app.use(express_1.default.json());
     }
     dbConnect() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield coneccion_1.default.authenticate();
-                console.log("Base de datos conectada");
+                console.log('Base de datos conectada');
             }
             catch (error) {
-                console.log('Error al conectarse con la base de datos:', error);
+                console.log('Error al conectarse a la base de datos:', error);
             }
+        });
+    }
+    listen() {
+        this.app.listen(this.port, () => {
+            console.log(`Servidor corriendo en el puerto ${this.port}`);
         });
     }
 }
