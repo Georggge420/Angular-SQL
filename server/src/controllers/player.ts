@@ -33,7 +33,7 @@ export const deletePlayer  = async (req: Request,res: Response) => {
     }else{
         await player1.destroy();
         res.json({
-            msg: `El jugador ${player1.nickname} se elmino con exito`
+            msg: `El jugador se elmino con exito`
         })
     }
 }
@@ -70,7 +70,7 @@ export const updatePlayer  = async(req: Request,res: Response) => {
         if(player1){
             await player1.update(body)
             res.json({
-                msg: `el player ${player1.nickname} fue actualizado con exito`
+                msg: `el player fue actualizado con exito`
             }) 
         }else{
             res.status(404).json({

@@ -1,58 +1,55 @@
-import express, {Application, Request, Response} from 'express';
+import express, { Application, Request, Response } from 'express';
+import path from 'path'; // Necesitarás este módulo para manejar rutas
 import routesPlayer from '../routes/player';
 import cors from 'cors';
 import db from '../db/coneccion';
 
-export class Server{
+export class Server {
     private app: Application;
     private port: string;
-    
-    constructor(){
-            console.log(process.env.PORT);
-            this.app = express();
-            this.port = process.env.PORT || '3001';
-            this.midlewares();
-            this.listen();
-            this.routes();
-            this.dbConnect();
+
+    constructor() {
+        this.app = express();
+        this.port = process.env.PORT || '3001';
+        this.midlewares();
+        this.routes();
+        this.dbConnect();
+        this.listen();
     }
 
-    listen(){
+    listen() {
         this.app.listen(this.port, () => {
-            console.log(`Aplicacion corriendo en el puerto ${this.port}`);
-        })
+            console.log(`Aplicación corriendo en el puerto ${this.port}`);
+        });
     }
 
-    routes(){
-        this.app.get('/', (req: Request, res: Response) => {
-            res.json({
-                msg: 'API working'
-            })
-        })
-
+    routes() {
+        // Rutas de API
         this.app.use('/api/players', routesPlayer);
+
+        // Cualquier otra ruta que no sea API, debe servir el archivo index.html
+        this.app.get('*', (req: Request, res: Response) => {
+            res.sendFile(path.resolve(__dirname, '../build', 'index.html'));
+        });
     }
 
-    midlewares(){
+    midlewares() {
+        // Middleware para servir los archivos estáticos
+        this.app.use(express.static(path.join(__dirname, '../build')));
 
-        this.app.use(cors({
-            origin: 'http://localhost:4200' // Cambia esto por la dirección de tu frontend si es diferente
-        }));
+        // Configurar CORS
+        this.app.use(cors());
 
-        //Parsear el body
+        // Parsear el body como JSON
         this.app.use(express.json());
     }
 
-    async dbConnect(){
-
+    async dbConnect() {
         try {
             await db.authenticate();
-            console.log("base de datos conectada");
+            console.log("Base de datos conectada");
         } catch (error) {
-            console.log(error);
-            console.log('Error al conectarse con la base de datos');
+            console.log('Error al conectarse con la base de datos:', error);
         }
-
-        
     }
 }

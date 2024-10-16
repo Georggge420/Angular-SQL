@@ -14,47 +14,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Server = void 0;
 const express_1 = __importDefault(require("express"));
+const path_1 = __importDefault(require("path")); // Necesitarás este módulo para manejar rutas
 const player_1 = __importDefault(require("../routes/player"));
 const cors_1 = __importDefault(require("cors"));
 const coneccion_1 = __importDefault(require("../db/coneccion"));
 class Server {
     constructor() {
-        console.log(process.env.PORT);
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '3001';
-        this.listen();
         this.midlewares();
         this.routes();
         this.dbConnect();
+        this.listen();
     }
     listen() {
         this.app.listen(this.port, () => {
-            console.log(`Aplicacion corriendo en el puerto ${this.port}`);
+            console.log(`Aplicación corriendo en el puerto ${this.port}`);
         });
     }
     routes() {
-        this.app.get('/', (req, res) => {
-            res.json({
-                msg: 'API working'
-            });
-        });
+        // Rutas de API
         this.app.use('/api/players', player_1.default);
+        // Cualquier otra ruta que no sea API, debe servir el archivo index.html
+        this.app.get('*', (req, res) => {
+            res.sendFile(path_1.default.resolve(__dirname, '../build', 'index.html'));
+        });
     }
     midlewares() {
-        //Parsear el body
-        this.app.use(express_1.default.json());
-        //cors
+        // Middleware para servir los archivos estáticos
+        this.app.use(express_1.default.static(path_1.default.join(__dirname, '../build')));
+        // Configurar CORS
         this.app.use((0, cors_1.default)());
+        // Parsear el body como JSON
+        this.app.use(express_1.default.json());
     }
     dbConnect() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield coneccion_1.default.authenticate();
-                console.log("base de datos conectada");
+                console.log("Base de datos conectada");
             }
             catch (error) {
-                console.log(error);
-                console.log('Error al conectarse con la base de datos');
+                console.log('Error al conectarse con la base de datos:', error);
             }
         });
     }

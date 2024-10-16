@@ -43,7 +43,7 @@ const deletePlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     else {
         yield player1.destroy();
         res.json({
-            msg: `El jugador ${player1.nickname} se elmino con exito`
+            msg: `El jugador se elmino con exito`
         });
     }
 });
@@ -72,7 +72,7 @@ const updatePlayer = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         if (player1) {
             yield player1.update(body);
             res.json({
-                msg: `el player ${player1.nickname} fue actualizado con exito`
+                msg: `el player fue actualizado con exito`
             });
         }
         else {
