@@ -14,41 +14,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Server = void 0;
 const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
 const player_1 = __importDefault(require("../routes/player"));
+const cors_1 = __importDefault(require("cors"));
 const coneccion_1 = __importDefault(require("../db/coneccion"));
 class Server {
     constructor() {
+        console.log(process.env.PORT);
         this.app = (0, express_1.default)();
-        this.port = process.env.PORT || '3001'; // Asegúrate de que este puerto esté configurado correctamente
-        this.middlewares(); // Aquí se configura CORS
+        this.port = process.env.PORT || '3001';
+        this.midlewares();
+        this.listen();
         this.routes();
         this.dbConnect();
     }
-    middlewares() {
-        // Permitir todas las orígenes (uso temporal solo en desarrollo)
-        this.app.use((0, cors_1.default)()); // Aquí es donde agregas esta línea
-        // Parsear el body a JSON
-        this.app.use(express_1.default.json());
+    listen() {
+        this.app.listen(this.port, () => {
+            console.log(`Aplicacion corriendo en el puerto ${this.port}`);
+        });
     }
     routes() {
-        // Definir las rutas aquí
+        this.app.get('/', (req, res) => {
+            res.json({
+                msg: 'API working'
+            });
+        });
         this.app.use('/api/players', player_1.default);
+    }
+    midlewares() {
+        this.app.use((0, cors_1.default)({
+            origin: 'http://localhost:4200' // Cambia esto por la dirección de tu frontend si es diferente
+        }));
+        //Parsear el body
+        this.app.use(express_1.default.json());
     }
     dbConnect() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield coneccion_1.default.authenticate();
-                console.log('Base de datos conectada');
+                console.log("base de datos conectada");
             }
             catch (error) {
-                console.log('Error al conectarse a la base de datos:', error);
+                console.log(error);
+                console.log('Error al conectarse con la base de datos');
             }
-        });
-    }
-    listen() {
-        this.app.listen(this.port, () => {
-            console.log(`Servidor corriendo en el puerto ${this.port}`);
         });
     }
 }
